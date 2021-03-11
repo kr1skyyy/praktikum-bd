@@ -1,14 +1,15 @@
-import {Entity, PrimaryColumn, Column, OneToMany} from "typeorm";
+import {Entity, PrimaryColumn, Column, OneToMany, ManyToOne} from "typeorm";
 import { Pravi } from "./Pravi";
 
 @Entity()
 export class Narushenie {
 
     @PrimaryColumn()
-    @OneToMany(type => Pravi, pravi => pravi.narushenie)
-    kod: number;
+    kod: string;
 
     @Column()
     vid: string;
 
+    @OneToMany(type => Pravi, pravi => pravi.narushenie, { cascade: true })
+    pravi: Pravi[];
 }

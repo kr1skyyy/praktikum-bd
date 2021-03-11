@@ -1,6 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinColumn} from "typeorm";
+import { Avtomobil } from "./Avtomobil";
 import { Narushenie } from "./Narushenie";
-import { Sobstvenik } from "./Sobstvenik";
 
 @Entity()
 export class Pravi {
@@ -8,13 +8,13 @@ export class Pravi {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    @ManyToOne(type => Sobstvenik, sobstvenik => sobstvenik.egn)
-    sobstvenik: Sobstvenik;
+    @ManyToOne(type => Avtomobil, avtomobil => avtomobil.regnomer)
+        @JoinColumn()
+        avtomobil: Avtomobil;
 
-    @Column()
-    @ManyToOne(type => Narushenie, narushenie => narushenie.kod)
-    narushenie: Narushenie;
+    @ManyToOne(type => Narushenie, narushenie => narushenie.pravi)
+        @JoinColumn()
+        narushenie: Narushenie;
 
     @Column({ type: 'date' })
     data: Date;

@@ -6,7 +6,6 @@ import { Pravi } from "./Pravi";
 export class Sobstvenik {
     
     @PrimaryColumn()
-    @OneToMany(type => Pravi, pravi => pravi.sobstvenik)
     egn: string;
 
     @Column()
@@ -21,7 +20,6 @@ export class Sobstvenik {
     @Column()
     knijka: string;
 
-    @OneToMany(type => Avtomobil, avtomobil => avtomobil.regnomer)
+    @OneToMany(type => Avtomobil, avtomobil => avtomobil.regnomer, { cascade: true })
     avtomobili: Avtomobil[];
-
 }

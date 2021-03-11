@@ -19,27 +19,32 @@ createConnection().then(async connection => {
     // console.log("Loaded users: ", users);
 
     const sobstvenik = new Sobstvenik();
+    const avtomobil = new Avtomobil();
+    const narushenie = new Narushenie();
+    const pravi = new Pravi();
+
     sobstvenik.adres = 'Adres1';
     sobstvenik.egn = '123455679';
     sobstvenik.ime = 'Sobstvenik 1';
     sobstvenik.knijka = '44444';
     sobstvenik.talon = '123123';
-
-    const avtomobil = new Avtomobil();
+    
     avtomobil.regnomer = 'PP1234BC';
     avtomobil.cvqt = 'bql';
     avtomobil.marka = 'Mercedes';
     avtomobil.zakupen = new Date();
     avtomobil.sobstvenik = sobstvenik;
-
-    const narushenie = new Narushenie();
-    narushenie.kod = 1;
+    
+    narushenie.kod = '1';
     narushenie.vid = 'Leko';
 
-    const pravi = new Pravi();
-    pravi.sobstvenik = sobstvenik;
+    pravi.avtomobil = avtomobil;
     pravi.narushenie = narushenie;
     pravi.data = new Date();
+    
+    narushenie.pravi = [pravi];
+    avtomobil.narusheniq = [pravi];
+    sobstvenik.avtomobili = [avtomobil];
 
     await connection.manager.save(sobstvenik);
     await connection.manager.save(avtomobil);
