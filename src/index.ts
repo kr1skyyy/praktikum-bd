@@ -1,23 +1,20 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
+
 import {Avtomobil} from "./entity/Avtomobil";
 import { Narushenie } from "./entity/Narushenie";
 import { Pravi } from "./entity/Pravi";
 import {Sobstvenik} from "./entity/Sobstvenik";
 
 const express = require('express');
+const bodyParser = require("body-parser");
+const cors = require("cors");
+
 const app = express();
+app.use(bodyParser.json());
+app.use(cors());
 
 createConnection().then(async connection => {
-
-    // console.log("Inserting a new user into the database...");
-    // await connection.manager.save(user);
-    // console.log("Saved a new user with id: " + user.id);
-
-    // console.log("Loading users from the database...");
-    // const users = await connection.manager.find(User);
-    // console.log("Loaded users: ", users);
-
     const sobstvenik = new Sobstvenik();
     const avtomobil = new Avtomobil();
     const narushenie = new Narushenie();
@@ -42,9 +39,9 @@ createConnection().then(async connection => {
     pravi.narushenie = narushenie;
     pravi.data = new Date();
     
-    narushenie.pravi = [pravi];
-    avtomobil.narusheniq = [pravi];
-    sobstvenik.avtomobili = [avtomobil];
+    // narushenie.pravi = [pravi];
+    // avtomobil.narusheniq = [pravi];
+    // sobstvenik.avtomobili = [avtomobil];
 
     await connection.manager.save(sobstvenik);
     await connection.manager.save(avtomobil);
@@ -52,12 +49,25 @@ createConnection().then(async connection => {
     await connection.manager.save(pravi);
 
     app.get('/', (req, res) => {
-        res.send(`${JSON.stringify(sobstvenik)}\n${JSON.stringify(avtomobil)}`);
+        res.send(`<pre>${[sobstvenik, avtomobil, narushenie, pravi].map((item) => {
+            return `${JSON.stringify(item)}\n`;
+        })}</pre>`);
     });
 
-    app.listen(3000);
+    app.get('/avtomobil(/:id)?', async (req, res) => {
+        const { id } = req.params;
+        const searchOptions = id in req.params ? {where: { regnomer: id }} : null;
+        
+        res.json(
+            await connection.manager
+                .getRepository('Avtomobil')
+                .find(searchOptions)
+        );
+    });
 
-    console.log('Port 3000');
+    app.listen(4000);
+
+    console.log('Port 4000');
 
 }).catch(error => console.log(error));
 

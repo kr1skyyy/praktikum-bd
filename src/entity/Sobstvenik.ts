@@ -1,6 +1,5 @@
 import {Entity, PrimaryColumn, Column, OneToMany} from "typeorm";
 import { Avtomobil } from "./Avtomobil";
-import { Pravi } from "./Pravi";
 
 @Entity()
 export class Sobstvenik {
