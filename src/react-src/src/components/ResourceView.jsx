@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ResourceView({ resource }) {
     const classes = useStyles();
 
-    if (!resource) return <div className="container">{'<-- Please select a resource'}</div>
+    if (!resource) return <div className="container">{'<-- Please select database'}</div>
 
     return (
         <div className={classes.root}>

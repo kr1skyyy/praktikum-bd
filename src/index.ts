@@ -4,10 +4,12 @@ import {createConnection} from "typeorm";
 const express = require('express');
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static(path.join(__dirname, '/react-src/build')));
 
 createConnection().then(async connection => {
     // const sobstvenik = new Sobstvenik();
@@ -54,6 +56,10 @@ createConnection().then(async connection => {
         );
     };
 
+    app.get('/client', (req, res) => {        
+        res.sendFile(path.join(__dirname, '/react-src/build/index.html'));
+    });
+    
     app.get('/avtomobil(/:id)?', await makeQuery('Avtomobil', 'regnomer'));
     app.get('/sobstvenik(/:id)?', await makeQuery('Sobstvenik', 'egn'));
     app.get('/pravi(/:id)?', await makeQuery('Pravi', 'id'));
