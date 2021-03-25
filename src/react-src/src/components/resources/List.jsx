@@ -7,7 +7,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { getList } from '../../useConnection';
+import { getList } from '../../constants';
+import Loading from '../utils/Loader';
 
 const useStyles = makeStyles({
   table: {
@@ -18,12 +19,15 @@ const useStyles = makeStyles({
 export default function BasicTable(props) {
   const classes = useStyles();
   const [list, setList] = React.useState([]);
+  const [error, setError] = React.useState();
 
   React.useEffect(() => {
-      getList(props.resource).then(setList);
+      getList(props.resource).then(setList)
+        .catch(err => setError(String(err)));
   }, [props.resource]);
 
-  if (!list.length) return <div>List is empty.</div>;
+  if (error) return <div>{error}</div>;
+  if (!list.length) return <Loading />;
 
   return (
     <TableContainer component={Paper}>

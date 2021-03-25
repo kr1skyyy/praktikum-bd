@@ -6,6 +6,12 @@ const RESOURCES = {
     NARUSHENIE: 'narushenie',
 }
 
+const VIEWS = {
+    CREATE: 'create',
+    EDIT: 'edit',
+    LIST: 'list',
+}
+
 const getList = async (resource) => {
     return (await fetch(`${SERVER_URL}/${resource}`)).json();
 };
@@ -13,5 +19,6 @@ const getList = async (resource) => {
 export {
     SERVER_URL,
     RESOURCES,
+    VIEWS,
     getList,
 };

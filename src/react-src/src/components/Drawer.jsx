@@ -3,11 +3,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Divider from '@material-ui/core/Divider';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
-import { RESOURCES } from '../useConnection';
+import { RESOURCES } from '../constants';
+import { capitalize } from '@material-ui/core';
 
 const useStyles = makeStyles({
     list: {
@@ -38,10 +40,14 @@ export default function TemporaryDrawer({ openDrawer, setOpenDrawer, setResource
                     onKeyDown={toggleDrawer(false)}
                 >
                     <List>
+                        <ListItem>
+                            <ListItemText primary="Databases" />
+                        </ListItem>
+                        <Divider />
                         {Object.values(RESOURCES).map((res, index) => (
                             <ListItem button onClick={() => setResource(res)} key={res}>
                                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                                <ListItemText primary={res} />
+                                <ListItemText primary={capitalize(res)} />
                             </ListItem>
                         ))}
                     </List>

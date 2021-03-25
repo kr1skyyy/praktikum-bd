@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ButtonAppBar({ resource, setOpenDrawer, openDrawer }) {
+export default function ButtonAppBar({ resource, setOpenDrawer, openDrawer, theme, setTheme }) {
     const classes = useStyles();
 
     return (
@@ -32,8 +32,8 @@ export default function ButtonAppBar({ resource, setOpenDrawer, openDrawer }) {
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
                         {capitalize(resource ? resource : 'No database selected')}
-          </Typography>
-                    <Button color="inherit">Login</Button>
+                    </Typography>
+                    <Button onClick={() => setTheme(!theme)} color="inherit">Change Theme</Button>
                 </Toolbar>
             </AppBar>
         </div>
