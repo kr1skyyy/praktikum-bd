@@ -1,13 +1,18 @@
-import List from './components/List';
+import * as React from 'react';
+import ResourceView from './components/ResourceView';
 import Navigation from './components/Navigation';
-import { RESOURCES } from './useConnection';
+import Drawer from './components/Drawer';
 
 function App() {
+  const [resource, setResource] = React.useState('');
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+
   return (
     <div>
-      <Navigation />
+      <Navigation resource={resource} openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+      <Drawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} setResource={setResource} />
       <div className="container">
-        <List resource={RESOURCES.AVTOMOBIL} />
+        <ResourceView resource={resource} />
       </div>
     </div>
   );
