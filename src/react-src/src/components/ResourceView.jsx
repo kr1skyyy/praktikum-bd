@@ -9,7 +9,7 @@ import CreateView from './resources/Create';
 const useStyles = makeStyles((theme) => ({
     root: {
       '& > *': {
-        margin: theme.spacing(1),
+        margin: theme.spacing(2),
       },
     },
   }));

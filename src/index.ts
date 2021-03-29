@@ -34,10 +34,10 @@ createConnection().then(async connection => {
     app.get('/avtomobil(/:id)?', await makeQuery('Avtomobil', 'regnomer'));
     app.get('/sobstvenik(/:id)?', await makeQuery('Sobstvenik', 'egn'));
     app.get('/narushenie(/:id)?', await makeQuery('Narushenie', 'kod'));
-    
+
     app.get('/pravi(/:id)?', async (req, res) => {
         const { id } = req.params;
-        const { getJson } = req.query;
+        const { json } = req.query;
         const searchOptions = id ? {where: { id }} : {} as any;
         searchOptions.relations = ['avtomobil', 'narushenie'];
   
@@ -45,12 +45,28 @@ createConnection().then(async connection => {
             .getRepository('Pravi')
             .find(searchOptions);
 
-        res.json(getJson ? result : result.map((pravi: Pravi) => ({
+        res.json(json ? result : result.map((pravi: Pravi) => ({
             id: pravi.id,
             data: pravi.data,
             avtomobil: pravi.avtomobil.regnomer,
             narushenie: pravi.narushenie.vid,
         })));
+    });
+
+    app.post('/create/:resource', async (req, res) => {
+        const { body } = req;
+        const { resource } = req.params;
+        let response = {} as any;
+
+        try {
+            const newEntity = await connection.getRepository(resource).create(body);
+            if (newEntity) await connection.manager.save(newEntity);
+            response.success = true;
+        } catch (err) {
+            response.error = err;
+        }
+        
+        res.json(response);
     });
 
     app.listen(4000);

@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { getList } from '../../constants';
 import Loading from '../utils/Loader';
+import { capitalize } from '@material-ui/core';
 
 const useStyles = makeStyles({
   table: {
@@ -35,16 +36,16 @@ export default function BasicTable(props) {
         <TableHead>
           <TableRow>
             {Object.keys(list[0]).map((key, index) => (
-              <TableCell key={index}>{key}</TableCell>
+              <TableCell key={index}>{capitalize(key || '')}</TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
           {list.map((element, index) => (
             <TableRow key={index}>
-              {Object.keys(element).map((prop, id) => (
-                <TableCell key={props.resource + id} component="th" scope="row">
-                  {element[prop]}
+              {Object.values(element).map((value, id) => (
+                <TableCell key={value + id} component="th" scope="row">
+                  {value}
                 </TableCell>
               ))}
             </TableRow>
