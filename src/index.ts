@@ -1,5 +1,7 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
+import { Pravi } from "./entity/Pravi";
+import importRecords from "./records/importRecords";
 
 const express = require('express');
 const bodyParser = require("body-parser");
@@ -12,39 +14,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '/react-src/build')));
 
 createConnection().then(async connection => {
-    // const sobstvenik = new Sobstvenik();
-    // const avtomobil = new Avtomobil();
-    // const narushenie = new Narushenie();
-    // const pravi = new Pravi();
-
-    // sobstvenik.adres = 'Adres1';
-    // sobstvenik.egn = '123455679';
-    // sobstvenik.ime = 'Sobstvenik 1';
-    // sobstvenik.knijka = '44444';
-    // sobstvenik.talon = '123123';
-    
-    // avtomobil.regnomer = 'PP1234BC';
-    // avtomobil.cvqt = 'bql';
-    // avtomobil.marka = 'Mercedes';
-    // avtomobil.zakupen = new Date();
-    // avtomobil.sobstvenik = sobstvenik;
-    
-    // narushenie.kod = '1';
-    // narushenie.vid = 'Leko';
-
-    // pravi.avtomobil = avtomobil;
-    // pravi.narushenie = narushenie;
-    // pravi.data = new Date();
-    
-    // // narushenie.pravi = [pravi];
-    // // avtomobil.narusheniq = [pravi];
-    // // sobstvenik.avtomobili = [avtomobil];
-
-    // await connection.manager.save(sobstvenik);
-    // await connection.manager.save(avtomobil);
-    // await connection.manager.save(narushenie);
-    // await connection.manager.save(pravi);
-
+    await importRecords(connection);
     const makeQuery = (repo, idKey) => async (req, res) => {
         const { id } = req.params;
         const searchOptions = id ? {where: { [idKey]: id }} : null;
@@ -56,14 +26,32 @@ createConnection().then(async connection => {
         );
     };
 
+
     app.get('/client', (req, res) => {        
         res.sendFile(path.join(__dirname, '/react-src/build/index.html'));
     });
     
     app.get('/avtomobil(/:id)?', await makeQuery('Avtomobil', 'regnomer'));
     app.get('/sobstvenik(/:id)?', await makeQuery('Sobstvenik', 'egn'));
-    app.get('/pravi(/:id)?', await makeQuery('Pravi', 'id'));
     app.get('/narushenie(/:id)?', await makeQuery('Narushenie', 'kod'));
+    
+    app.get('/pravi(/:id)?', async (req, res) => {
+        const { id } = req.params;
+        const { getJson } = req.query;
+        const searchOptions = id ? {where: { id }} : {} as any;
+        searchOptions.relations = ['avtomobil', 'narushenie'];
+  
+        const result = await connection.manager
+            .getRepository('Pravi')
+            .find(searchOptions);
+
+        res.json(getJson ? result : result.map((pravi: Pravi) => ({
+            id: pravi.id,
+            data: pravi.data,
+            avtomobil: pravi.avtomobil.regnomer,
+            narushenie: pravi.narushenie.vid,
+        })));
+    });
 
     app.listen(4000);
 
