@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { getList } from '../../constants';
+import { getList, VIEWS } from '../../constants';
 import Loading from '../utils/Loader';
 import { capitalize } from '@material-ui/core';
 
@@ -21,6 +21,11 @@ export default function BasicTable(props) {
   const classes = useStyles();
   const [list, setList] = React.useState([]);
   const [error, setError] = React.useState();
+
+  const selectEntity = (id) => {
+    props.setEntity(list[id]);
+    props.setView(VIEWS.EDIT);
+  }
 
   React.useEffect(() => {
       getList(props.resource).then(setList)
@@ -44,7 +49,7 @@ export default function BasicTable(props) {
           {list.map((element, index) => (
             <TableRow key={index}>
               {Object.values(element).map((value, id) => (
-                <TableCell key={value + id} component="th" scope="row">
+                <TableCell key={value + id} component="th" scope="row" style={{cursor: 'pointer'}} onClick={() => selectEntity(index)} >
                   {value}
                 </TableCell>
               ))}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getList, createEntity, VIEWS } from '../../constants';
+import { getList, editEntity, VIEWS, deleteEntity } from '../../constants';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) =>
   }),
 );
 
-export default function CreateView({ resource, setView }) {
+export default function EditView({ resource, setView, entity }) {
     const classes = useStyles();
     const [keys, setKeys] = React.useState([]);
     const [sending, setSending] = React.useState(false);
@@ -38,15 +38,18 @@ export default function CreateView({ resource, setView }) {
 
     const submit = (e) => {
       e.preventDefault();
-      const data = Array.from(e.target)
+      const newEntity = Array.from(e.target)
         .filter((el) => el.nodeName === 'INPUT')
         .reduce((acc, el) => ({ ...acc, [el.id]: el.value }), {});
       setSending(true);
       
-      createEntity(resource, data)
+      const payload = { newEntity, oldEntity: entity };
+      console.log(JSON.stringify(payload));
+      editEntity(resource, payload)
         .then(({ success, error }) => {
           setSending(false);
           if (!success) {
+            console.log(error);
             setError(error);
           } else {
             setView(VIEWS.LIST);
@@ -54,6 +57,19 @@ export default function CreateView({ resource, setView }) {
         })
         .catch((e) => setError(String(e)));
     };
+
+    const deleteSelected = () => {
+        deleteEntity(resource, entity)
+        .then(({ success, error }) => {
+            setSending(false);
+            if (!success) {
+              console.log(error);
+              setError(error);
+            } else {
+              setView(VIEWS.LIST);
+            }
+          });
+    }
 
     if (error) return <div className="container">{error}</div>;
     if (!keys.length || sending) return <Loading />
@@ -70,12 +86,14 @@ export default function CreateView({ resource, setView }) {
                   label={key !== DATE ? key : ''} 
                   type={key === DATE ? 'datetime-local' : 'text'}
                   style={index === keys.length - 1 && index % 2 === 0 ? { minWidth: '-webkit-fill-available', } : null}
+                  defaultValue={entity[key]}
                 />
             ))}
 
             <div className="col-12">
               <Button variant="contained" color="primary" className="mt-3 pt-2" onClick={() => setView(VIEWS.LIST)}>Back to List</Button>
               <Button type="submit" variant="contained" color="primary" className="mt-3 ml-3 pt-2">Create New {capitalize(resource)}</Button>
+              <Button variant="contained" className="mt-3 ml-3 pt-2" style={{backgroundColor: '#dc3545', color: '#fff'}} onClick={deleteSelected} >Delete entity</Button>
             </div>
           </form>
          </div>

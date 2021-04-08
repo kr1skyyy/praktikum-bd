@@ -8,7 +8,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
-import { RESOURCES } from '../constants';
+import { RESOURCES, VIEWS } from '../constants';
 import { capitalize } from '@material-ui/core';
 
 const useStyles = makeStyles({
@@ -19,7 +19,7 @@ const useStyles = makeStyles({
         width: 'auto',
     },
 });
-export default function TemporaryDrawer({ openDrawer, setOpenDrawer, setResource }) {
+export default function TemporaryDrawer({ openDrawer, setOpenDrawer, setResource, setView }) {
     const classes = useStyles();
 
     const toggleDrawer = (open) => (event) => {
@@ -29,6 +29,11 @@ export default function TemporaryDrawer({ openDrawer, setOpenDrawer, setResource
 
         setOpenDrawer(open);
     };
+
+    const selectResource = (res) => {
+        setResource(res);
+        setView(VIEWS.LIST);
+    }
 
     return (
         <React.Fragment>
@@ -45,7 +50,7 @@ export default function TemporaryDrawer({ openDrawer, setOpenDrawer, setResource
                         </ListItem>
                         <Divider />
                         {Object.values(RESOURCES).map((res, index) => (
-                            <ListItem button onClick={() => setResource(res)} key={res}>
+                            <ListItem button onClick={() => selectResource(res)} key={res}>
                                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                                 <ListItemText primary={capitalize(res)} />
                             </ListItem>

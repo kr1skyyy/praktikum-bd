@@ -12,12 +12,18 @@ const VIEWS = {
     LIST: 'list',
 }
 
+const MUTATIONS = {
+    CREATE: 'create',
+    EDIT: 'edit',
+    DELETE: 'delete',
+};
+
 const getList = async (resource) => {
     return (await fetch(`${SERVER_URL}/${resource}`)).json();
 };
 
-const createEntity = async (resource, payload) => {
-    return (await fetch(`${SERVER_URL}/create/${resource}`, {
+const mutateEntity = async (resource, payload, mutation) => {
+    return (await fetch(`${SERVER_URL}/${mutation}/${resource}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -26,10 +32,16 @@ const createEntity = async (resource, payload) => {
     })).json();
 };
 
+const createEntity = (resource, payload) => mutateEntity(resource, payload, MUTATIONS.CREATE);
+const editEntity = (resource, payload) => mutateEntity(resource, payload, MUTATIONS.EDIT);
+const deleteEntity = (resource, payload) => mutateEntity(resource, payload, MUTATIONS.DELETE);
+
 export {
     SERVER_URL,
     RESOURCES,
     VIEWS,
     getList,
     createEntity,
+    editEntity,
+    deleteEntity,
 };

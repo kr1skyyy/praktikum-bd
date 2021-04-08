@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '/react-src/build')));
 
 createConnection().then(async connection => {
-    await importRecords(connection);
+    // await importRecords(connection);
     const makeQuery = (repo, idKey) => async (req, res) => {
         const { id } = req.params;
         const searchOptions = id ? {where: { [idKey]: id }} : null;
@@ -67,6 +67,24 @@ createConnection().then(async connection => {
         }
         
         res.json(response);
+    });
+
+    app.post('/edit/:resource', async (req, res) => {
+        try {
+            const { resource } = req.params;
+            const { body } = req;
+            console.log(JSON.parse(body));
+            
+            const { newEntity, oldEntity } = JSON.parse(body);
+            let found = await connection.manager.getRepository(resource).find(oldEntity);
+            if (found) {
+                found = newEntity;
+                await connection.manager.save(found);
+            }
+            res.json({success: true});
+        } catch (err) {
+            res.json({success: false, error: err});
+        }
     });
 
     app.listen(4000);
