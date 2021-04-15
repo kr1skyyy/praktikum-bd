@@ -92,7 +92,7 @@ export default function EditView({ resource, setView, entity }) {
 
             <div className="col-12">
               <Button variant="contained" color="primary" className="mt-3 pt-2" onClick={() => setView(VIEWS.LIST)}>Back to List</Button>
-              <Button type="submit" variant="contained" color="primary" className="mt-3 ml-3 pt-2">Create New {capitalize(resource)}</Button>
+              <Button type="submit" variant="contained" color="primary" className="mt-3 ml-3 pt-2">Save {capitalize(resource)}</Button>
               <Button variant="contained" className="mt-3 ml-3 pt-2" style={{backgroundColor: '#dc3545', color: '#fff'}} onClick={deleteSelected} >Delete entity</Button>
             </div>
           </form>

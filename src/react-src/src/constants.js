@@ -10,6 +10,7 @@ const VIEWS = {
     CREATE: 'create',
     EDIT: 'edit',
     LIST: 'list',
+    CUSTOM: 'custom',
 }
 
 const MUTATIONS = {
@@ -17,6 +18,8 @@ const MUTATIONS = {
     EDIT: 'edit',
     DELETE: 'delete',
 };
+
+const CUSTOM_QUERYS_LENGTH = 3;
 
 const getList = async (resource) => {
     return (await fetch(`${SERVER_URL}/${resource}`)).json();
@@ -40,6 +43,7 @@ export {
     SERVER_URL,
     RESOURCES,
     VIEWS,
+    CUSTOM_QUERYS_LENGTH,
     getList,
     createEntity,
     editEntity,

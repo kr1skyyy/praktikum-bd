@@ -1,5 +1,6 @@
 import "reflect-metadata";
-import {createConnection} from "typeorm";
+import { createConnection } from "typeorm";
+import { Avtomobil } from "./entity/Avtomobil";
 import { Pravi } from "./entity/Pravi";
 import importRecords from "./records/importRecords";
 
@@ -70,21 +71,58 @@ createConnection().then(async connection => {
     });
 
     app.post('/edit/:resource', async (req, res) => {
-        try {
             const { resource } = req.params;
             const { body } = req;
-            console.log(JSON.parse(body));
             
-            const { newEntity, oldEntity } = JSON.parse(body);
+            const { newEntity, oldEntity } = body;
             let found = await connection.manager.getRepository(resource).find(oldEntity);
             if (found) {
                 found = newEntity;
                 await connection.manager.save(found);
+                res.json({success: true});
+            } else {
+                res.json({success: false});
             }
-            res.json({success: true});
-        } catch (err) {
-            res.json({success: false, error: err});
-        }
+    });
+
+    app.get('/custom/1', async (req, res) => {
+        // reg nomer na avtomobil s nai-mn narusheniq
+        const found = await connection.getRepository(Pravi)
+            .createQueryBuilder('pravi')
+            .select('pravi.id')
+            .groupBy('pravi.narushenie')
+            .orderBy('count(*)', 'DESC')
+            .limit(1)
+            .getOne();
+
+        const { avtomobil } = await connection.manager.getRepository(Pravi).findOne(found, { relations: ['avtomobil'] });
+
+        res.json([avtomobil]);
+    });
+
+    app.get('/custom/2', async (req, res) => {
+        // sobstvenik s nai-malko pritejavani avtomobili
+        const found = await connection.getRepository(Avtomobil)
+            .createQueryBuilder('avtomobili')
+            .select('avtomobili.regnomer')
+            .groupBy('avtomobili.sobstvenik')
+            .orderBy('count(*)', 'ASC')
+            .limit(1)
+            .getOne();
+
+        const { sobstvenik } = await connection.manager.getRepository(Avtomobil).findOne(found, { relations: ['sobstvenik'] });
+
+        res.json([sobstvenik]);
+    });
+
+    app.get('/custom/3', async (req, res) => {
+        // nai-ranna data na narushenie
+        const found = await connection.manager
+            .getRepository(Pravi)
+            .findOne({order: {data: 'ASC'}});
+            // .findOne({relations: ['avtomobil'], order: {data: 'ASC'}});
+
+        res.json([found]);
     });
 
     app.listen(4000);

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import List from './resources/List';
+import List from './views/List';
 import { capitalize } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { VIEWS } from '../constants';
-import CreateView from './resources/Create';
-import EditView from './resources/Edit';
+import CreateView from './views/Create';
+import EditView from './views/Edit';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,5 +40,9 @@ export default function ResourceView({ resource, view, setView }) {
       <EditView resource={resource} setView={setView} entity={entity} />
     );
 
-    return <div>Unknown ResourceView {view}</div>
+    if (view === VIEWS.CUSTOM) return (
+      <div style={{color: 'red'}}>Add Logic in src/components/views/Custom.jsx</div>
+    )
+
+    return <div style={{color: 'red'}}>Unknown ResourceView {view}</div>
 };

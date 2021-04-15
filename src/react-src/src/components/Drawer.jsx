@@ -55,6 +55,10 @@ export default function TemporaryDrawer({ openDrawer, setOpenDrawer, setResource
                                 <ListItemText primary={capitalize(res)} />
                             </ListItem>
                         ))}
+                        <ListItem button onClick={() => setView(VIEWS.CUSTOM)}>
+                            <ListItemIcon><InboxIcon /></ListItemIcon>
+                            <ListItemText primary={capitalize('Custom')} />
+                        </ListItem>
                     </List>
                 </div>
             </Drawer>
