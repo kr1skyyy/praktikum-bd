@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { VIEWS } from '../constants';
 import CreateView from './views/Create';
 import EditView from './views/Edit';
+import CustomView from './views/Custom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,8 +42,8 @@ export default function ResourceView({ resource, view, setView }) {
     );
 
     if (view === VIEWS.CUSTOM) return (
-      <div style={{color: 'red'}}>Add Logic in src/components/views/Custom.jsx</div>
-    )
+      <CustomView resource={resource} setView={setView} entity={entity} />
+    );
 
     return <div style={{color: 'red'}}>Unknown ResourceView {view}</div>
 };

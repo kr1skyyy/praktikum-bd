@@ -35,6 +35,8 @@ const mutateEntity = async (resource, payload, mutation) => {
     })).json();
 };
 
+const getCustom = (resource) => getList(`custom/${resource}`);
+
 const createEntity = (resource, payload) => mutateEntity(resource, payload, MUTATIONS.CREATE);
 const editEntity = (resource, payload) => mutateEntity(resource, payload, MUTATIONS.EDIT);
 const deleteEntity = (resource, payload) => mutateEntity(resource, payload, MUTATIONS.DELETE);
@@ -48,4 +50,5 @@ export {
     createEntity,
     editEntity,
     deleteEntity,
+    getCustom,
 };

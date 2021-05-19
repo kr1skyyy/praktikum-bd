@@ -59,7 +59,7 @@ export default function EditView({ resource, setView, entity }) {
     };
 
     const deleteSelected = () => {
-        deleteEntity(resource, entity)
+        deleteEntity(resource, { deletedEntity: entity })
         .then(({ success, error }) => {
             setSending(false);
             if (!success) {

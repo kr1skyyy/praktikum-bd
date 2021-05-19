@@ -85,6 +85,17 @@ createConnection().then(async connection => {
             }
     });
 
+    app.post('/delete/:resource', async (req, res) => {
+        const { resource } = req.params;
+        const { body } = req;
+        
+        const { deletedEntity } = body;
+        let found = await connection.manager.getRepository(resource).find(deletedEntity);
+        await connection.manager.getRepository(resource).remove(found);
+
+        res.json({success: true});
+});
+
     app.get('/custom/1', async (req, res) => {
         // reg nomer na avtomobil s nai-mn narusheniq
         const found = await connection.getRepository(Pravi)
